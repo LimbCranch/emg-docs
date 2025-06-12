@@ -1,0 +1,98 @@
+﻿"""EMG ML Engine - Machine Learning Pipeline for EMG Gesture Recognition
+
+This package provides a complete machine learning pipeline for training,
+optimizing, and deploying EMG gesture recognition models.
+
+Example:
+    Basic usage for training a gesture recognition model:
+
+    >>> from emg_ml import DataLoader, ModelTrainer, FeatureExtractor
+    >>>
+    >>> # Load and preprocess data
+    >>> loader = DataLoader("path/to/emg_data.csv")
+    >>> data = loader.load_and_validate()
+    >>>
+    >>> # Extract features
+    >>> extractor = FeatureExtractor(config="configs/features.yaml")
+    >>> features = extractor.transform(data)
+    >>>
+    >>> # Train model
+    >>> trainer = ModelTrainer(model_type="cnn_1d")
+    >>> model = trainer.fit(features, labels)
+    >>>
+    >>> # Export for deployment
+    >>> model.export_onnx("gesture_model.onnx")
+
+The package is organized into several key modules:
+
+- `data_ingestion`: Loading and validating EMG data from various sources
+- `features`: Feature extraction and engineering pipelines
+- `models`: ML model implementations and training frameworks
+- `optimization`: Model optimization and export utilities
+- `evaluation`: Model evaluation and validation tools
+
+Configuration:
+    All components use YAML configuration files for reproducible
+    experiments. See the `configs/` directory for examples.
+
+Safety:
+    This package includes validation and safety checks appropriate
+    for medical device applications. All models include confidence
+    thresholds and fallback mechanisms.
+"""
+
+class ModelTrainer:
+    """Train machine learning models for EMG gesture recognition.
+
+    The ModelTrainer provides a unified interface for training various
+    types of models, from classical ML to deep learning approaches.
+
+    Args:
+        model_type: Type of model to train ('svm', 'cnn_1d', 'lstm', etc.)
+        config_path: Path to model configuration file
+        random_state: Random seed for reproducibility
+
+    Attributes:
+        model_type (str): The type of model being trained
+        config (dict): Model configuration parameters
+        is_fitted (bool): Whether the model has been trained
+
+    Example:
+        Train a CNN model with custom configuration:
+
+        >>> trainer = ModelTrainer(
+        ...     model_type="cnn_1d",
+        ...     config_path="configs/cnn_config.yaml"
+        ... )
+        >>> model = trainer.fit(X_train, y_train)
+        >>> accuracy = trainer.evaluate(X_test, y_test)
+        >>> print(f"Test accuracy: {accuracy:.3f}")
+
+    Safety:
+        The trainer includes automatic validation of training data
+        and model outputs. Models failing safety checks will raise
+        `ModelValidationError`.
+    """
+
+    def fit(self, X: np.ndarray, y: np.ndarray,
+            validation_data: Optional[Tuple[np.ndarray, np.ndarray]] = None) -> 'BaseModel':
+        """Train the model on the provided data.
+
+        Args:
+            X: Training features with shape (n_samples, n_features) or
+               (n_samples, n_timesteps, n_channels) for sequential models
+            y: Training labels with shape (n_samples,)
+            validation_data: Optional validation data as (X_val, y_val) tuple
+
+        Returns:
+            Trained model instance
+
+        Raises:
+            ValueError: If training data is invalid or insufficient
+            ModelValidationError: If trained model fails safety checks
+
+        Note:
+            Training progress is logged using the configured logger.
+            Use `logging.getLogger('emg_ml.training')` to control verbosity.
+        """
+        pass

@@ -1,0 +1,198 @@
+# mkdocs.yml
+site_name: EMG Prosthetics System Documentation
+site_description: 'Complete documentation for the EMG gesture recognition and prosthetic control system'
+site_author: 'EMG Prosthetics Team'
+site_url: 'https://emg-prosthetics.github.io/emg-docs/'
+
+repo_name: 'emg-prosthetics/emg-docs'
+repo_url: 'https://github.com/emg-prosthetics/emg-docs'
+edit_uri: 'edit/main/docs/'
+
+copyright: 'Copyright &copy; 2024 EMG Prosthetics Team'
+
+theme:
+  name: material
+  language: en
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.indexes
+    - toc.follow
+    - toc.integrate
+    - search.highlight
+    - search.share
+    - search.suggest
+    - content.action.edit
+    - content.action.view
+    - content.code.copy
+    - content.code.annotate
+    - announce.dismiss
+
+  icon:
+    repo: fontawesome/brands/github
+    edit: material/pencil
+    view: material/eye
+
+extra:
+  version:
+    provider: mike
+    default: latest
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/emg-prosthetics
+    - icon: fontawesome/solid/envelope
+      link: mailto:team@emg-prosthetics.com
+
+  analytics:
+    provider: google
+    property: !ENV GOOGLE_ANALYTICS_KEY
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+      title: On this page
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_index: !!python/name:materialx.emoji.twemoji
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: emg-prosthetics
+      repo: emg-docs
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+plugins:
+  - search:
+      lang: en
+  - minify:
+      minify_html: true
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: timeago
+  - git-authors
+  - redirects:
+      redirect_maps:
+        'old-page.md': 'new-page.md'
+  - mike:
+      version_selector: true
+      css_dir: css
+      javascript_dir: js
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - getting-started/index.md
+      - Installation: getting-started/installation.md
+      - Quick Start: getting-started/quick-start.md
+      - First Gesture: getting-started/first-gesture.md
+  - Architecture:
+      - architecture/index.md
+      - System Overview: architecture/system-overview.md
+      - Rust Core: architecture/rust-core.md
+      - Python ML: architecture/python-ml.md
+      - Kotlin UI: architecture/kotlin-ui.md
+      - Communication: architecture/communication.md
+  - User Guide:
+      - user-guide/index.md
+      - Device Setup: user-guide/device-setup.md
+      - Calibration: user-guide/calibration.md
+      - Gesture Training: user-guide/gesture-training.md
+      - Troubleshooting: user-guide/troubleshooting.md
+  - Developer Guide:
+      - developer-guide/index.md
+      - Development Setup: developer-guide/development-setup.md
+      - Contributing: developer-guide/contributing.md
+      - Code Style: developer-guide/code-style.md
+      - Testing: developer-guide/testing.md
+      - Release Process: developer-guide/release-process.md
+  - Clinical:
+      - clinical/index.md
+      - Safety Requirements: clinical/safety-requirements.md
+      - Clinical Workflow: clinical/clinical-workflow.md
+      - Data Privacy: clinical/data-privacy.md
+      - Regulatory Compliance: clinical/regulatory-compliance.md
+  - API Reference:
+      - api/index.md
+      - Rust API: api/rust-api.md
+      - Python API: api/python-api.md
+      - Kotlin API: api/kotlin-api.md
+  - Configuration:
+      - configuration/index.md
+      - Device Config: configuration/device-config.md
+      - ML Parameters: configuration/ml-parameters.md
+      - UI Customization: configuration/ui-customization.md
+      - Deployment Config: configuration/deployment-config.md
+  - Architecture Decisions:
+      - adr/index.md
+      - ADR Template: adr/template.md
+      - Multi-Language Architecture: adr/0001-multi-language-architecture.md
+      - Communication Protocol: adr/0002-communication-protocol.md
+      - ML Framework Choice: adr/0003-ml-framework-choice.md
+  - Tutorials:
+      - tutorials/index.md
+      - Adding New Gesture: tutorials/adding-new-gesture.md
+      - Custom Body Model: tutorials/custom-body-model.md
+      - Performance Optimization: tutorials/performance-optimization.md
+      - Clinical Deployment: tutorials/clinical-deployment.md
+  - Appendices:
+      - Glossary: appendices/glossary.md
+      - References: appendices/references.md
+      - Changelog: appendices/changelog.md
+      - License: appendices/license.md
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+extra_javascript:
+  - assets/javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js

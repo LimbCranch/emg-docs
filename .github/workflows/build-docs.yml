@@ -1,0 +1,106 @@
+# .github/workflows/build-docs.yml
+name: Build Documentation
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Needed for git-revision-date-localized
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Validate configuration
+        run: |
+          python scripts/validate_config.py
+          python scripts/validate_links.py
+
+      - name: Build documentation
+        run: |
+          mkdocs build --strict --verbose
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: documentation-site
+          path: site/
+          retention-days: 30
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Deploy to GitHub Pages
+        run: |
+          git config --global user.name "Documentation Bot"
+          git config --global user.email "docs@emg-prosthetics.com"
+          mkdocs gh-deploy --force --clean --verbose
+
+  link-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install linkchecker
+
+      - name: Build docs
+        run: mkdocs build
+
+      - name: Check internal links
+        run: |
+          python scripts/validate_links.py --internal-only
+
+      - name: Check external links (weekly)
+        if: github.event.schedule == '0 0 * * 0'  # Weekly on Sunday
+        run: |
+          linkchecker --config .linkchecker.ini site/
